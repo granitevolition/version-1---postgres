@@ -10,13 +10,27 @@ This repository contains the database schema and setup files for the user regist
 
 ## Connection Details
 
-When setting up the backend application, you'll need to use the connection details provided by Railway:
+When setting up the backend application, you'll need to use the connection details provided by Railway. Railway provides these connection strings as environment variables:
 
 ```
-POSTGRES_URL=postgresql://<username>:<password>@<host>:<port>/<database>
+DATABASE_URL=postgresql://postgres:password@postgres.railway.internal:5432/railway
+DATABASE_PUBLIC_URL=postgresql://postgres:password@shortline-url:5432/railway
 ```
 
-Make sure to add these as environment variables in your backend service.
+For the backend service, you should use these variables directly rather than creating a new POSTGRES_URL environment variable. The setup.js script now looks for these standard Railway variables.
+
+## SSL Configuration
+
+Railway Postgres requires SSL configuration. When connecting with Node.js, include the following SSL settings:
+
+```javascript
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false 
+  }
+});
+```
 
 ## Database Schema
 
@@ -27,3 +41,11 @@ The database contains a `users` table with the following structure:
 - `password_hash`: Hashed password (required)
 - `created_at`: Timestamp of when the user was created
 - `updated_at`: Timestamp of when the user was last updated
+
+## Railway Default Configuration
+
+Railway Postgres uses these default values:
+- Port: 5432
+- Database: railway
+- Username: postgres
+- Host: postgres.railway.internal (internal) or your assigned public URL
