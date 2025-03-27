@@ -8,16 +8,19 @@ const fs = require('fs');
 const path = require('path');
 
 async function setupDatabase() {
-  // Railway provides a connection string as an environment variable
-  const connectionString = process.env.POSTGRES_URL;
+  // Railway provides connection strings as environment variables
+  const connectionString = process.env.DATABASE_URL || process.env.DATABASE_PUBLIC_URL;
   
   if (!connectionString) {
-    console.error('Error: POSTGRES_URL environment variable not set');
+    console.error('Error: No database connection string found. Please check DATABASE_URL or DATABASE_PUBLIC_URL environment variables');
     process.exit(1);
   }
 
   const client = new Client({
     connectionString,
+    ssl: {
+      rejectUnauthorized: false // Required for Railway Postgres
+    }
   });
 
   try {
