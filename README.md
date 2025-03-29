@@ -8,6 +8,23 @@ This repository contains the database schema and setup files for the user regist
 2. Connect to the database using the connection details provided by Railway
 3. Run the schema.sql file to set up the required tables
 
+## Cleanup of Humanizer Tables
+
+A cleanup script has been added to remove any humanizer-related tables from the database:
+
+1. Run the cleanup.js script:
+   ```
+   node cleanup.js
+   ```
+
+2. This will execute the SQL commands in cleanup-humanizer-tables.sql, which:
+   - Drops any humanizer-related tables
+   - Drops any humanizer-related views
+   - Drops any humanizer-related functions
+   - Drops any associated sequences
+
+3. The script will display a list of remaining tables after cleanup for verification
+
 ## Connection Details
 
 When setting up the backend application, you'll need to use the connection details provided by Railway. Railway provides these connection strings as environment variables:
